@@ -17,18 +17,18 @@ ProductTag.init(
 
     product_id: {
       type: DataTypes.INTEGER,
-      // refernce the 'product' models 'id'
-      references: {
-        model: Product,
+      
+      references: {           // refernce the 'product' models 'id'
+        model: 'product',
         key: 'id'
       }
     },
 
     tag_id: {
       type: DataTypes.INTEGER,
-      // refernce the 'tag' models'id'
-      references: {
-        model: Tag,
+      
+      references: {           // refernce the 'tag' models'id'
+        model: 'tag',
         key: 'id'
       }
     }
