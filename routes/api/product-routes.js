@@ -3,11 +3,9 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-
-
 // FIND ALL PRODUCTS
 // ======================================================================
-router.get('/', (req, res) => {  // be sure to include its associated Category and Tag data
+router.get('/', (req, res) => {
   Product.findAll({
     include: [
       {
@@ -32,9 +30,6 @@ router.get('/', (req, res) => {  // be sure to include its associated Category a
 });
 // ======================================================================
 
-
-
-
 // FIND ONE PRODUCT BY ID
 // ======================================================================
 router.get('/:id', (req, res) => {
@@ -44,12 +39,11 @@ router.get('/:id', (req, res) => {
     },
     include: [
       {
-        model: Category,
-        attributes: ['id', 'category_name']
+        model: Category
       },
       {
         model: Tag,
-        attributes: ['id', 'tag_name']
+        through: ProductTag
       }
     ]
   }).then(dbProduct => {
@@ -152,7 +146,7 @@ router.delete('/:id', (req, res) => {
       res.status(404).json({ message: 'Sorry, No product found matching that ID'});
       return;
     }
-    res.status(200).json({ message: `Product has been deleted`});
+    res.status(200).json({ message: 'Product has been deleted'});
   });
 });
 

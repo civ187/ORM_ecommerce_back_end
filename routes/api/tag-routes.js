@@ -1,39 +1,60 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag } = require('../../models');
+const { Tag, Product, ProductTag, Category } = require('../../models');
 
 // The `/api/tags` endpoint
 
+// FIND ALL TAGS WITH ASSOCIATED PRODUCT DATA
+// ======================================================================
 router.get('/', (req, res) => {
-  // find all tags
-  Tag.findAll({}).then(dbTag => {
-    res.json(dbTag);
-  });
-  // be sure to include its associated Product data
-});
-
-router.get('/:id', (req, res) => {
-  // find a single tag by its `id`
-  Tag.findOne({
-    where: {
-      id: req.params.id
-    }
+  Tag.findAll({
+    include:[
+      {
+        model: Product,
+        through: ProductTag
+      }
+    ]
   }).then(dbTag => {
     res.json(dbTag);
   });
-  // be sure to include its associated Product data
 });
+// ======================================================================
 
+
+// FIND ONE TAG BY ID WITH ASSOCIATEDPRODUCT DATA
+// ======================================================================
+router.get('/:id', (req, res) => {
+  Tag.findOne({
+    where: {
+      id: req.params.id
+    },
+    include:[
+      {
+        model: Product,
+        through: ProductTag
+      }
+    ]
+  }).then(dbTag => {
+    res.json(dbTag);
+  });
+});
+// ======================================================================
+
+
+// CREATE A NEW TAG
+// ======================================================================
 router.post('/', (req, res) => {
-  // create a new tag
   Tag.create({
     tag_name: req.body.tag_name
   }).then(dbTag => {
     res.json(dbTag);
   });
 });
+// ======================================================================
 
+
+// UPDATE A TAG NAME BY ID
+// ======================================================================
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
   Tag.update(
     {
       tag_name: req.body.tag_name
@@ -47,15 +68,22 @@ router.put('/:id', (req, res) => {
     res.json(dbTag);
   });
 });
+// ======================================================================
 
+
+// DELETE ONE TAG BY ID
+// ======================================================================
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
   Tag.destroy({
     where: {
       id: req.params.id
     }
   }).then(dbTag => {
-    res.json(dbTag);
+    if(!dbTag) {
+      res.status(404).json({ message: 'Sorry, No tag found matching that ID'});
+      return;
+    }
+    res.status(200).json({ message: 'Tag has been deleted'});
   });
 });
 
