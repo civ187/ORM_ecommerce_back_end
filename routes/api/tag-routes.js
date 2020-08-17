@@ -34,8 +34,16 @@ router.get('/:id', (req, res) => {
       }
     ]
   }).then(dbTag => {
+    if (!dbTag) {
+      res.status(404).json({ message: 'Sorry, No Tag found with that ID'});
+      return;
+    }
     res.json(dbTag);
-  });
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  })
 });
 // ======================================================================
 
@@ -65,8 +73,17 @@ router.put('/:id', (req, res) => {
       }
     }
   ).then(dbTag => {
-    res.json(dbTag);
-  });
+    if (!dbTag) {
+      res.status(404).json({ message: 'Sorry, No Tag found with that ID'});
+      return;
+    }
+    // res.json(dbTag);
+    res.status(200).json({ message: 'Tag name has been updated'});
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  })
 });
 // ======================================================================
 

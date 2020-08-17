@@ -14,10 +14,6 @@ router.get('/', (req, res) => {
       }
     ]
   }).then(dbCategory => {
-    if (!dbCategory) {
-      res.status(404).json({ message: 'Sorry, no Categories found '});
-      return;
-    }
     res.json(dbCategory);
   })
   .catch(err => {
@@ -60,13 +56,16 @@ router.get('/:id', (req, res) => {
 // ======================================================================
 router.post('/', (req, res) => {
 console.log(req.body);
-Category.create({
-  category_name: req.body.category_name
-}).then(dbCategory => {
-  res.json(dbCategory);
+Category.create(
+  {
+    category_name: req.body.category_name
+  })
+.then(dbCategory => {
+    res.json(dbCategory);
   });
 });
 // ======================================================================
+
 
 // UPDATE A CATEGORY BY IT'S ID
 // ======================================================================
